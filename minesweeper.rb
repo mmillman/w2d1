@@ -20,11 +20,9 @@ class Board
 
 	def initialize(num_rows, num_cols, num_mines)
 		@num_rows, @num_cols = num_rows, num_cols
-		@blocks = Array.new(num_rows * num_cols) { :unexplored }
-		num_mines.times { |index| @blocks[index] = :mine }
-		@blocks.shuffle
+		@blocks = Array.new(num_rows) { [:unexplored] * num_cols }
+		@mines = random_mines(num_rows, num_cols, num_mines)
 		add_fringe
-		@flags = {}
 	end
 
 	def add_fringe
@@ -35,12 +33,24 @@ class Board
 		end
 	end
 
+	def random_mines(rows, cols, mines)
+		mines_hash = Hash.new(false)
+		indexes = (0...rows*cols).to_a.sample(mines)
+		indexes.each do |index|
+			mines_hash[[index / cols, index % cols]] = true
+		end
+		mines_hash
+	end
+
 	def at(x, y)
 
 	end
 
 	def to_s
 		@blocks.map do |block|
+			case block
+			when :unexplored then '*'
+			when :interior then '_'
 
 		end
 	end
