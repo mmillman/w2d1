@@ -41,6 +41,22 @@ class Board
 		end
 	end
 
+	def reveal(x, y)
+		@exterior_layer[x][y] = Exterior::EMPTY
+		if @interior_layer[x][y] == Interior::MINE
+			p "u dead"
+		end
+	end
+
+	def toggle_flag(x, y)
+		return if @exterior_layer[x][y] == Exterior::EMPTY
+		if @exterior_layer[x][y] == Exterior::COVER
+			@exterior_layer[x][y] = Exterior::FLAG
+		else
+			@exterior_layer[x][y] = Exterior::COVER
+		end
+	end
+
 	def add_random_mines(rows, cols, mines)
 		indexes = (0...rows * cols).to_a.sample(mines)
 		indexes.each do |index|
@@ -60,7 +76,7 @@ class Board
 					when Interior::EMPTY then game_board[x][y] = '_'
 					when Interior::MINE then game_board[x][y] = 'X'
 					else
-						@interior_layer[x][y]
+						game_board[x][y] = @interior_layer[x][y].to_s
 					end
 				end
 			end
