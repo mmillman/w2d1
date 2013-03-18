@@ -2,7 +2,6 @@ class Minesweeper
 
 	def initialize(rows, cols, mines)
 		@board = Board.new(rows, cols, mines)
-		puts @board
 	end
 
 	def play(player)
@@ -33,14 +32,11 @@ class Board
 
 	def initialize(num_rows, num_cols, num_mines)
 		@num_rows, @num_cols = num_rows, num_cols
-		# cover layer can have :cover, :flag or nil
 		@exterior_layer = Array.new(num_rows) { [Exterior::COVER] * num_cols }
-		# hidden layer can have fringes (:1-:8), and :mine
 		@interior_layer = Array.new(num_rows) { [Interior::EMPTY] * num_cols }
-
 		add_random_mines(num_rows, num_cols, num_mines)
 		add_fringe
-		@interior_layer.each {|row| p row}
+		game_board.each {|row| p row}
 	end
 
 	def add_fringe
@@ -76,10 +72,25 @@ class Board
 
 	end
 
-	def public_board
-
+	def game_board
+		game_board = Array.new(@num_rows) {[]}
+		(0...@num_rows).each do |x|
+			(0...@num_rows).each do |y|
+				case @exterior_layer[x][y]
+				when Exterior::COVER then game_board[x][y] = '*'
+				when Exterior::FLAG then game_board[x][y] = 'F'
+				else
+					case @interior_layer[x][y]
+					when Interior::EMPTY then game_board[x][y] = '_'
+					when Interior::MINE then game_board[x][y] = 'X'
+					else
+						@interior_layer[x][y]
+					end
+				end
+			end
+		end
+		game_board
 	end
-
 end
 
 class Player
