@@ -18,12 +18,18 @@ class Player
 
 	def blow_up(board)
 		print_board(board)
+<<<<<<< HEAD
 		# REV haha
+=======
+>>>>>>> 75d5ad21bff76320e41ebe7f48b80988274298cb
 		puts "u dead"
 	end
 
 	def print_board(board)
+<<<<<<< HEAD
 		#REV these lines are hard to read - maybe rename vars?
+=======
+>>>>>>> 75d5ad21bff76320e41ebe7f48b80988274298cb
 		puts "     " + 0.upto(board[0].length - 1).map { |i| i.to_s.rjust(2)}.join(' ')
 		puts "    " + "-" * board[0].length * 3 + "--"
 

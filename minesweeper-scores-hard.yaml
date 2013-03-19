@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 #REV haha wow, nice high score!
+=======
+>>>>>>> 75d5ad21bff76320e41ebe7f48b80988274298cb
 --- !ruby/object:HighScore
 high_scores:
 - - 5.775991
