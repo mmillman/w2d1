@@ -78,4 +78,8 @@ class Minesweeper
 
 end
 
+<<<<<<< HEAD
+#REV Peter didn't give it a try?
+=======
+>>>>>>> 75d5ad21bff76320e41ebe7f48b80988274298cb
 Minesweeper.new_game(:hard).play(Player.new("Mark"))

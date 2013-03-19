@@ -26,6 +26,10 @@ class Board
 	def setup_board_state
 		@stepped_on_mine = false
 		@start_time = Time.now
+<<<<<<< HEAD
+		#REV made me look up ::, thanks
+=======
+>>>>>>> 75d5ad21bff76320e41ebe7f48b80988274298cb
 		@exterior_layer = Array.new(@num_rows) { [Exterior::COVER] * @num_cols }
 		@interior_layer = Array.new(@num_rows) { [Interior::EMPTY] * @num_cols }
 		@flags, @mines = Set.new, Set.new
