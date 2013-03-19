@@ -1,6 +1,7 @@
 require 'set'
 
 class Board
+	attr_accessor :mode
 
 	module Interior
 		EMPTY = 0
@@ -14,15 +15,26 @@ class Board
 		NONE = 0
 	end
 
-	def initialize(num_rows, num_cols, num_mines)
-		@num_rows, @num_cols, @num_mines = num_rows, num_cols, num_mines
+	def initialize(rows, cols, mines, mode)
+		@num_rows, @num_cols, @num_mines, @mode = rows, cols, mines, mode
+
+		setup_board_state
+
+		#@interior_layer.each { |row| p row }
+	end
+
+	def setup_board_state
 		@stepped_on_mine = false
-		@exterior_layer = Array.new(num_rows) { [Exterior::COVER] * num_cols }
-		@interior_layer = Array.new(num_rows) { [Interior::EMPTY] * num_cols }
+		@start_time = Time.now
+		@exterior_layer = Array.new(@num_rows) { [Exterior::COVER] * @num_cols }
+		@interior_layer = Array.new(@num_rows) { [Interior::EMPTY] * @num_cols }
 		@flags, @mines = Set.new, Set.new
-		add_random_mines(num_rows, num_cols, num_mines)
+		add_random_mines
 		add_fringe
-		@interior_layer.each { |row| p row }
+	end
+
+	def seconds_elapsed
+		Time.now - @start_time
 	end
 
 	def stepped_on_mine?
@@ -74,6 +86,7 @@ class Board
 	end
 
 	def reveal(x, y)
+		return unless on_board?(x, y)
 		return unless @exterior_layer[x][y] == Exterior::COVER
 		@exterior_layer[x][y] = Exterior::NONE
 		@stepped_on_mine = true	if @interior_layer[x][y] == Interior::MINE
@@ -83,6 +96,7 @@ class Board
 	end
 
 	def toggle_flag(x, y)
+		return unless on_board?(x, y)
 		return if @exterior_layer[x][y] == Exterior::NONE
 		if @exterior_layer[x][y] == Exterior::COVER
 			@exterior_layer[x][y] = Exterior::FLAG
@@ -93,11 +107,11 @@ class Board
 		end
 	end
 
-	def add_random_mines(rows, cols, mines)
-		indexes = (0...rows * cols).to_a.sample(mines)
+	def add_random_mines
+		indexes = (0...@num_rows * @num_cols).to_a.sample(@num_mines)
 		indexes.each do |index|
-			@mines.add([index / cols, index % cols])
-			@interior_layer[index / cols][index % cols] = Interior::MINE
+			@mines.add([index / @num_cols, index % @num_cols])
+			@interior_layer[index / @num_cols][index % @num_cols] = Interior::MINE
 		end
 	end
 
@@ -110,7 +124,7 @@ class Board
 				when Exterior::FLAG then game_board[x][y] = 'F'
 				else
 					case @interior_layer[x][y]
-					when Interior::EMPTY then game_board[x][y] = '_'
+					when Interior::EMPTY then game_board[x][y] = '.'
 					when Interior::MINE then game_board[x][y] = 'X'
 					else
 						game_board[x][y] = @interior_layer[x][y].to_s
